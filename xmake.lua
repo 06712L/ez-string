@@ -1,6 +1,13 @@
 add_rules("mode.release", "mode.debug")
 set_languages("gnu17")
 
+includes("@builtin/xpack")
+
+-- project metadata
+set_project("ez-string")
+set_version("0.0.1")
+set_license("MIT")
+
 target("main")
     set_kind("binary")
     set_default(true)
