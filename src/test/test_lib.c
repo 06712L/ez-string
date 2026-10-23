@@ -1,4 +1,4 @@
-#include "tests_lib.h"
+#include "test_lib.h"
 #include <stdint.h>
 
 signed int sign(const int64_t num)

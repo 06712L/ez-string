@@ -15,14 +15,14 @@ target("string")
 target("test_lib")
     set_kind("object")
     set_default(false)
-    add_files("src/tests_lib.c")
+    add_files("src/test/test_lib.c")
 
-for _, file in ipairs(os.files("src/test_*.c")) do
+for _, file in ipairs(os.files("src/test/*.c")) do
     local name = path.basename(file)
     target("test")
         set_kind("binary")
         set_default(false)
-        add_files("src/"..name..".c")
+        add_files("src/test/"..name..".c")
         add_deps("string", "test_lib")
-        add_tests("test", {realtime_output = true, remove_files = "src/main.c"})
+        add_tests("test", {realtime_output = true, remove_files = {"src/main.c", "src/test/test_lib.c"}})
 end
