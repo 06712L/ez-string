@@ -7,3 +7,6 @@ build/
 
 # Cache
 .cache/
+
+# Compilation database for lsp
+compile_commands.json
