@@ -9,13 +9,13 @@ target("main")
 
 target("string")
     set_kind("object")
-    add_files("src/string.c")
+    add_files("src/ez-string.c")
 
 -- for test
-target("test_lib")
+target("test-lib")
     set_kind("object")
     set_default(false)
-    add_files("src/test/test_lib.c")
+    add_files("src/test/test-lib.c")
 
 for _, file in ipairs(os.files("src/test/*.c")) do
     local name = path.basename(file)
@@ -23,6 +23,6 @@ for _, file in ipairs(os.files("src/test/*.c")) do
         set_kind("binary")
         set_default(false)
         add_files("src/test/"..name..".c")
-        add_deps("string", "test_lib")
-        add_tests("test", {realtime_output = true, remove_files = {"src/main.c", "src/test/test_lib.c"}})
+            add_deps("string", "test-lib")
+            add_tests("test", {realtime_output = true})
 end

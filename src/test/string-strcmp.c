@@ -1,9 +1,9 @@
-#include "string.h"
+#include "ez-string.h"
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "tests_lib.h"
+#include "test-lib.h"
 
 struct test_results
 {
