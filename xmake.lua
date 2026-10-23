@@ -19,10 +19,14 @@ target("test-lib")
 
 for _, file in ipairs(os.files("src/test/*.c")) do
     local name = path.basename(file)
-    target("test")
-        set_kind("binary")
-        set_default(false)
-        add_files("src/test/"..name..".c")
+    if name ~= "test-lib" then
+        target(name, function()
+            set_kind("binary")
+            set_default(false)
+            add_includedirs("src")
+            add_files("src/test/"..name..".c")
             add_deps("string", "test-lib")
             add_tests("test", {realtime_output = true})
+        end)
+    end
 end
