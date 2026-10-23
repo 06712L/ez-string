@@ -32,6 +32,10 @@ struct test_results test_strcmp()
 int main(void)
 {
     struct test_results results = test_strcmp();
-    if(results.code != 0) printf("fail code:%d\ntest1 results:%ld\ntest2 results:%ld\ni = %d\n", results.code, results.test1, results.test2, results.i);
+    if(results.code != 0)
+    {
+        puts("string-strcmp:");
+        printf("fail code:%d\ntest1 results:%ld\ntest2 results:%ld\ni = %d\n", results.code, results.test1, results.test2, results.i);
+    }
     return results.code;
 }
