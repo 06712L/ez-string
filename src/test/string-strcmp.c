@@ -23,32 +23,8 @@ results.code++;
 struct test_results test_strcmp()
 {
     struct test_results results = {0, 0, 1, 0};
-    const char *test_str[] =
-    {
-        "Goo Goo Bird Tool",
-        "meow meow",
-        "meow meow meow",
-        "OH MY LINUX!",
-        "idiot-tic-tac-toe",
-        "int main(int argc, char *argv[]);",
-        "+-*/=",
-        "snake_case",
-        "哎喲！",
-        "海水倒灌了！",
-        "0123456789.",
-        "test\rtest\n",
-        "67%",
-        "Don't give up!",
-        "2^3=?",
-        "test@test.test",
-        "~/Download/test.mp4",
-        "long long long long long long long long long long long long long long long long long long long long long long",
-        "\0",
-        "\0",
-        NULL
-    };
-    test(test_str[results.i] != NULL, ez_strcmp(test_str[results.i], test_str[results.i]), strcmp(test_str[results.i], test_str[results.i]));
-    test(test_str[results.i + 1] != NULL, ez_strcmp(test_str[results.i], test_str[results.i + 1]), strcmp(test_str[results.i], test_str[results.i + 1]));
+    test(test_string[results.i] != NULL, ez_strcmp(test_string[results.i], test_string[results.i]), strcmp(test_string[results.i], test_string[results.i]));
+    test(test_string[results.i + 1] != NULL, ez_strcmp(test_string[results.i], test_string[results.i + 1]), strcmp(test_string[results.i], test_string[results.i + 1]));
     return (struct test_results){0, 0, 0, 0};
 }
 #undef test
