@@ -1,7 +1,9 @@
 #include "ez-string.h"
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 size_t ez_strlen(const char *str)
 {
@@ -49,4 +51,31 @@ char* ez_strcpy(char *target, const char *str)
     }
     *target_ptr = '\0';
     return target;
+}
+
+char* ez_strstr(const char *haystack, const char *needle)
+{
+    if(haystack == NULL || needle == NULL || !ez_strcmp(needle, "\0")) return (char*)haystack;
+    const char *flag = NULL;
+    const char *haystack_ptr = haystack;
+    const char *needle_ptr = needle;
+    bool next = true;
+    while(*haystack_ptr != '\0' && *needle_ptr != '\0')
+    {
+        if(*haystack_ptr == *needle_ptr)
+        {
+            if(flag == NULL) flag = haystack_ptr;
+            needle_ptr++;
+            next = true;
+        }
+        else
+        {
+            flag = NULL;
+            needle_ptr = needle;
+            next ^= true;
+        }
+        if(next)haystack_ptr++;
+    }
+    if(*needle_ptr != '\0') flag = NULL;
+    return (char*)flag;
 }

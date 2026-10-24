@@ -4,6 +4,7 @@
 
 const char *test_string[] =
 {
+    "aab",
     "Goo Goo Bird Tool",
     "meow meow",
     "meow meow meow",
