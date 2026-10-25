@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 size_t ez_strlen(const char *str)
@@ -54,7 +55,6 @@ char* ez_strcpy(char *target, const char *str)
 
 char* ez_strstr(const char *haystack, const char *needle)
 {
-    // FIXME: 遇到aab類型的Unicode如"哎哎喲"返回NULL而非第2個字元內存位址，只要a的數量為偶數就可能發生：可能是因為在UTF-8中，"哎哎喲"類似這樣[1 2 1][1 2 1][1 3 2] (一個數字代表一字節) 導致目前的搜索算法返回NULL(找不到)
     if(haystack == NULL || needle == NULL || needle[0] == '\0') return (char*)haystack;
     const unsigned char *uhaystack = (const unsigned char*)haystack, *uneedle = (const unsigned char*)needle;
     uhaystack = (const unsigned char*)ez_strchr((const char*)uhaystack, uneedle[0]);
@@ -73,26 +73,22 @@ char* ez_strstr(const char *haystack, const char *needle)
         if(ne == hs) return (char*)uhaystack;
     }
     const unsigned char *flag = NULL;
-    const unsigned char *haystack_ptr = uhaystack;
-    const unsigned char *needle_ptr = uneedle;
-    bool next = true;
-    while(*haystack_ptr != '\0' && *needle_ptr != '\0')
+    const size_t needle_len = ez_strlen(needle);
+    const size_t needle_len_m1 = needle_len - 1;
+    while(uhaystack[needle_len_m1] != '\0')
     {
-        if(*haystack_ptr == *needle_ptr)
+        flag = uhaystack;
+        for(size_t i = 0; i < needle_len; i++)
         {
-            if(flag == NULL) flag = haystack_ptr;
-            needle_ptr++;
-            next = true;
+            if(uhaystack[i] != uneedle[i])
+            {
+                flag = NULL;
+                break;
+            }
         }
-        else
-        {
-            flag = NULL;
-            needle_ptr = uneedle;
-            next = !next;
-        }
-        if(next) haystack_ptr++;
+        if(flag == NULL) uhaystack++;
+        else break;
     }
-    if(*needle_ptr != '\0') flag = NULL;
     return (char*)flag;
 }
 
