@@ -20,6 +20,9 @@ struct test_results test_strstr(void)
     const char *test_strstr[] =
     {
         "ab",
+        "abc",
+        "abc",
+        "哎喲",
         "Tool",
         " meow",
         "喵",
