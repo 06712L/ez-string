@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
 size_t ez_strlen(const char *str)
 {
@@ -74,7 +73,7 @@ char* ez_strstr(const char *haystack, const char *needle)
             needle_ptr = needle;
             next ^= true;
         }
-        if(next)haystack_ptr++;
+        if(next) haystack_ptr++;
     }
     if(*needle_ptr != '\0') flag = NULL;
     return (char*)flag;
