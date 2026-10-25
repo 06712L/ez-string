@@ -54,10 +54,27 @@ char* ez_strcpy(char *target, const char *str)
 
 char* ez_strstr(const char *haystack, const char *needle)
 {
-    if(haystack == NULL || needle == NULL || !ez_strcmp(needle, "\0")) return (char*)haystack;
-    const char *flag = NULL;
-    const char *haystack_ptr = haystack;
-    const char *needle_ptr = needle;
+    // FIXME: 遇到aab類型的Unicode如"哎哎喲"返回NULL而非第2個字元內存位址，只要a的數量為偶數就可能發生：可能是因為在UTF-8中，"哎哎喲"類似這樣[1 2 1][1 2 1][1 3 2] (一個數字代表一字節) 導致目前的搜索算法返回NULL(找不到)
+    if(haystack == NULL || needle == NULL || needle[0] == '\0') return (char*)haystack;
+    const unsigned char *uhaystack = (const unsigned char*)haystack, *uneedle = (const unsigned char*)needle;
+    uhaystack = (const unsigned char*)ez_strchr((const char*)uhaystack, uneedle[0]);
+    if(uhaystack == NULL) return NULL;
+    if(uneedle[1] == '\0') return (char*)uhaystack;
+    else if(uneedle[2] == '\0')
+    {
+        uint16_t ne = (uneedle[0] << 8) | uneedle[1];
+        uint16_t hs = (uhaystack[0] << 8) | uhaystack[1];
+        if(ne == hs) return (char*)uhaystack;
+    }
+    else if(uneedle[3] == '\0')
+    {
+        uint32_t ne = (uneedle[0] << 16) | (uneedle[1] << 8) | uneedle[2];
+        uint32_t hs = (uhaystack[0] << 16) | (uhaystack[1] << 8) | uhaystack[2];
+        if(ne == hs) return (char*)uhaystack;
+    }
+    const unsigned char *flag = NULL;
+    const unsigned char *haystack_ptr = uhaystack;
+    const unsigned char *needle_ptr = uneedle;
     bool next = true;
     while(*haystack_ptr != '\0' && *needle_ptr != '\0')
     {
@@ -70,8 +87,8 @@ char* ez_strstr(const char *haystack, const char *needle)
         else
         {
             flag = NULL;
-            needle_ptr = needle;
-            next ^= true;
+            needle_ptr = uneedle;
+            next = !next;
         }
         if(next) haystack_ptr++;
     }
