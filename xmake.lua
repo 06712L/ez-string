@@ -11,7 +11,6 @@ set_license("MIT")
 target("main")
     set_kind("binary")
     set_default(true)
-    add_deps("string")
     add_files("src/main.c")
 
 target("string")
