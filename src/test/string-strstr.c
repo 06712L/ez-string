@@ -1,5 +1,5 @@
 #include "ez-string.h"
-#include "test/test-lib.h"
+#include "test-lib.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>

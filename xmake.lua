@@ -16,7 +16,7 @@ target("main")
 
 target("string")
     set_kind("object")
-    add_files("src/ez-string.c")
+    add_files("src/ez-string/*.c")
 
 -- for test
 target("test-lib")
@@ -30,7 +30,7 @@ for _, file in ipairs(os.files("src/test/*.c")) do
         target(name, function()
             set_kind("binary")
             set_default(false)
-            add_includedirs("src")
+            add_includedirs("src/ez-string")
             add_files("src/test/"..name..".c")
             add_deps("string", "test-lib")
             add_tests("test", {realtime_output = true})
