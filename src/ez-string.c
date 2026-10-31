@@ -106,6 +106,33 @@ char* ez_strchr(const char *s, const char c)
     return NULL;
 }
 
+static void strmove(char *str_head, ssize_t move_dist)
+{
+    if(move_dist == 0) return;
+    char *str_tail = ez_strchr(str_head, '\0');
+
+    // Decide moving drc
+    enum
+    {
+        RIGHT = 1,
+        LEFT = -1,
+    };
+    const int8_t  motion = (move_dist > 0) ? RIGHT:LEFT;
+
+    for(; move_dist != 0; move_dist -= motion)
+    {
+        char *ptr = (move_dist > 0) ? str_tail:str_head;
+        const char *end_flag = (move_dist > 0) ? str_head:str_tail + 1;
+        str_head += motion;
+        str_tail += motion;
+        while(ptr != end_flag)
+        {
+            ptr[motion] = *ptr;
+            ptr -= motion;
+        }
+    }
+}
+
 char* ez_strreplace(char *str, const char *replace_str, const char *target_str, int replace_mode, bool in_place, bool auto_realloc)
 {
     // Check arg
@@ -162,42 +189,22 @@ char* ez_strreplace(char *str, const char *replace_str, const char *target_str, 
             const size_t str_ptr_dist = str_ptr - str;
 
             str_mem_size += rt_diff_size;
-            if(rt_diff_size > 0)
+            if(rt_diff_size < 0) strmove((char*)end_flag, rt_diff_size);
+            char *tmp_ptr = realloc(str, str_mem_size);
+            if(tmp_ptr == NULL)
             {
-                char *tmp_ptr = realloc(str, str_mem_size);
-                if(tmp_ptr == NULL)
+                if(!in_place) free(str);
+                else
                 {
-                    if(!in_place) free(str);
-                    else
-                    {
-                        str = ez_strcpy(str, backup_str);
-                        free(backup_str);
-                    }
-                    return NULL;
+                    str = ez_strcpy(str, backup_str);
+                    free(backup_str);
                 }
-                str = tmp_ptr;
-                str_ptr = str + str_ptr_dist;
-                end_flag = str + end_flag_dist;
-                // TODO: Implement move string logic
+                return NULL;
             }
-            else if(rt_diff_size < 0)
-            {
-                // << move string logic
-                char *tmp_ptr = realloc(str, str_mem_size);
-                if(tmp_ptr == NULL)
-                {
-                    if(!in_place) free(str);
-                    else
-                    {
-                        str = ez_strcpy(str, backup_str);
-                        free(backup_str);
-                    }
-                    return NULL;
-                }
-                str = tmp_ptr;
-                str_ptr = str + str_ptr_dist;
-                end_flag = str + end_flag_dist;
-            }
+            str = tmp_ptr;
+            str_ptr = str + str_ptr_dist;
+            end_flag = str + end_flag_dist;
+            if(rt_diff_size > 0) strmove((char*)end_flag, rt_diff_size);
         }
         // TODO: Implement replace logic
     }
